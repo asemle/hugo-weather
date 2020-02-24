@@ -3,30 +3,30 @@
 
 <head>
     <title>Weather Dashboard</title>
-    <link rel="stylesheet" href="font.Rimouski.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
 </html>
 
 <body>
-    <div class="container">
-        <div class="app-title">
-            <p>Weather</p>
-        </div>
-        <div class="notification"></div>
-        <div class="weather-container">
-            <div class="weather-icon"><img src="icons.uknown.png"></div>
-            <div class="temperature-value">
-                <p>-0<span>C</span></p>
-            </div>
-            <div class="temparture-description">
-                <p> - </p>
-            </div>
-            <div class="location">
-                <p>-</p>
-            </div>
-        </div>
+    <div class="sidebar">
+        <span>Search for a City:</span>
+        <input type="text"/>
+        <button><i class="fas fa-search"></i></button>
+
+        <ul class="citylist"></ul>
+
     </div>
-    <script src="app.js"></script>
+    <div class="main">
+        <div class="current"></div>
+        <div class="forecastWrap">
+            <h2>5-Day Forecast:</h2>
+            <div class="forecast"></div>
+        </div>
+        
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="app.js"></script>
+    <script src="https://kit.fontawesome.com/137d395afc.js" crossorigin="anonymous"></script>
 </body>

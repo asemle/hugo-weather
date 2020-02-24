@@ -1,111 +1,36 @@
-*{
-    font-family: "Rimouski";
+body {
+    display: flex;
 }
 
-body{
-    background-color: #293251;
+.sidebar {
+    background-color: lightgray;
+    width: 360px;
+    padding: 10px;
+    display: inline-block;
 }
 
-.container{
-    width: 300px;    
-    background-color: #FFF;
-    
-    display: block;
-    margin: 0 auto;
-    
-    border-radius: 10px;
-    padding-bottom : 50px;
-}
-
-.app-title{
-    width: 300px;
-    height: 50px;
-    border-radius: 10px 10px 0 0;
-}
-
-.app-title p{
-    text-align: center;
+.main {
+    width: 860px;
     padding: 15px;
-    margin: 0 auto;
-    font-size: 1.2em;
-    color: #293251;
+    display: inline-block;
 }
 
-.notification{
-    background-color: #f8d7da;
-    display: none;
+.current {
+    width: 100%;
+    border: 1px solid gray;
 }
 
-.notification p{
-    color: #721c24;
-    font-size: 1.2em;
-    margin: 0;
-    text-align: center;
-    padding: 10px 0;
+.forecast {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
-.weather-container{
-    width: 300px;
-    height: 260px;
-    background-color: #F4F9FF;
+.forecast div {
+    background-color: blue;
+    color: white;
+    width: 15%;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 15px;
 }
-
-.weather-icon{
-    width: 300px;
-    height: 128px;
-}
-
-.weather-icon img{
-    display: block;
-    margin: 0 auto;
-}
-
-.temperature-value{
-    width: 300px;
-    height:60px;
-}
-
-.temperature-value p{
-    padding: 0;
-    margin: 0;
-    color: #293251;
-    font-size: 4em;
-    text-align: center;
-    cursor: pointer;
-}
-
-.temperature-value p:hover{
-    
-}
-
-.temperature-value span{
-    color: #293251;
-    font-size: 0.5em;
-}
-
-.temperature-description{
-    
-}
-
-.temperature-description p{
-    padding: 8px;
-    margin: 0;
-    color: #293251;
-    text-align: center;
-    font-size: 1.2em;
-}
-
-.location{
-    
-}
-
-.location p{
-    margin: 0;
-    padding: 0;
-    color: #293251;
-    text-align: center;
-    font-size: 0.8em;
-}
-
-
-

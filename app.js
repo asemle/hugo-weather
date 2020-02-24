@@ -1,8 +1,4 @@
-const notificationElement = document.querySelector(".notification");
-const iconElement = document.querySelector(".weather-icon");
-const tempElement = document.querySelector(".temperature-value p");
-const descElement = document.querySelector(".temperature-description p");
-const locationElement = document.querySelector(".location p");
+
 
 const weather = {};
 
@@ -15,55 +11,81 @@ const KELVIN = 273;
 
 const key = "82005d27a116c2880c8f0fcb866998a0";
 
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1; //January is 0!
 
-if ('geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition(setPosition, showError);
-} else {
-    notificationElement.style.display = "block";
-    notificationElement.innerHTML = "<p>No Location Support</p>";
+var yyyy = today.getFullYear();
+if (dd < 10) {
+    dd = '0' + dd;
 }
-
-// SET USER'S LOCATION
-function setPosition(position) {
-    let latitude = position.coords.latitude;
-    let longitude = position.coords.longitude;
-
-    getWeather(latitude, longitude);
+if (mm < 10) {
+    mm = '0' + mm;
 }
+var today = mm + '/' + dd + '/' + yyyy;
 
 
-function showError(error) {
-    notificationElement.style.display = "block";
-    notificationElement.innerHTML = `<p> ${error.message} </p>`;
-}
+$(document).ready(function() {
+    if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+
+            getWeather(latitude, longitude);
+
+        }, function() {
+            alert("error")
+        }
+        );
+
+    } else {
+        alert("no location support")
+    }
+})
 
 // GET WEATHER FROM API 
 function getWeather(latitude, longitude) {
-    let api = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`;
+    let currenturl = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`;
 
-    fetch(api)
-        .then(function (response) {
-            let data = response.json();
-            return data;
-        })
-        .then(function (data) {
-            weather.temperature.value = Math.floor(data.main.temp - KELVIN);
-            weather.description = data.weather[0].description;
-            weather.iconId = data.weather[0].icon;
-            weather.city = data.name;
-            weather.country = data.sys.country;
-        })
-        .then(function () {
-            displayWeather();
-        });
-}
+    let forecasturl = `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${key}`;
 
-// DISPLAY WEATHER 
-function displayWeather() {
-    iconElement.innerHTML = `<img src="icons/${weather.iconId}.png"/>`;
-    tempElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
-    descElement.innerHTML = weather.description;
-    locationElement.innerHTML = `${weather.city}, ${weather.country}`;
+    $.ajax({
+        url: currenturl,
+        method: "GET"
+    }).done(function(response) {
+        console.log(response)
+        let current = response;
+
+        let heading = `<h2>${current.name} ${today} <i class="fas ${current.weather[0].main === "Clear" ? 'fas-sun' : 'fas-cloud'}"/></h2>`
+        let temp = `<p>Temperature: ${celsiusToFahrenheit(current.main.temp - KELVIN)} &#176F</p>`;
+
+        let humidity = `<p>Humidity: ${current.main.humidity}%</p>`
+
+        let wind = `<p>Wind Speed: ${current.wind.speed} MPH</p>`
+
+        $(".current").append(heading, temp, humidity, wind)
+    });
+
+    $.ajax({
+        url: forecasturl,
+        method: "GET"
+    }).done(function (response) {
+        console.log(response)
+        let forecast = response;
+
+        for(var i = 0; i < 40; i += 8) {
+
+            let date = forecast.list[i].dt_txt.split(" ")[0]
+            date = `<h3>${date}</h3>`;
+
+            let temp = `<p>${celsiusToFahrenheit(forecast.list[i].main.temp - KELVIN).toFixed(2)} &#176F</p>`;
+            let humidity = `<p>${forecast.list[i].main.humidity}%</p>`
+
+            $(".forecast").append(`<div>${date} ${temp} ${humidity}</div>`)
+        }
+        
+    });
+
 }
 
 // C to F 
@@ -71,18 +93,3 @@ function celsiusToFahrenheit(temperature) {
     return (temperature * 9 / 5) + 32;
 }
 
-// WHEN THE USER CLICKS ON THE TEMPERATURE ELEMENT
-tempElement.addEventListener("click", function () {
-    if (weather.temperature.value === undefined) return;
-
-    if (weather.temperature.unit == "celsius") {
-        let fahrenheit = celsiusToFahrenheit(weather.temperature.value);
-        fahrenheit = Math.floor(fahrenheit);
-
-        tempElement.innerHTML = `${fahrenheit}°<span>F</span>`;
-        weather.temperature.unit = "fahrenheit";
-    } else {
-        tempElement.innerHTML = `${weather.temperature.value}°<span>C</span>`;
-        weather.temperature.unit = "celsius"
-    }
-});
